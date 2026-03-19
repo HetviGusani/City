@@ -2,6 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:city/screens/splash_screen.dart';
 import 'notifications.dart';
+import 'package:hive_flutter/hive_flutter.dart';  // ✅ not hive/hive.dart
+import 'package:city/model/hive.dart';
 
 Future<void> main() async {
 
@@ -10,6 +12,10 @@ Future<void> main() async {
   await Firebase.initializeApp();
 
   await NotificationService.initialize();
+
+  await Hive.initFlutter();                  // ✅ now works correctly
+  Hive.registerAdapter(BookedServiceAdapter());
+  await Hive.openBox<BookedService>('bookedServices');
 
   runApp(const MyCityConnectApp());
 }

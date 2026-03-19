@@ -1,20 +1,14 @@
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-
-class ServiceDetailScreen extends StatefulWidget {
-  final Map<String, dynamic> service;
-  final String mail;
-
-  const ServiceDetailScreen({Key? key, required this.service, required this.mail}) : super(key: key);
-
-  @override
-  State<ServiceDetailScreen> createState() => _ServiceDetailScreenState();
-}
+import 'dart:typed_data';                          // 👈 add
+import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';   // 👈 add
+import 'package:image_picker/image_picker.dart';
+import '../model/hive.dart';                        // 👈 add
 
 class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
   File? _image;
   final ImagePicker _picker = ImagePicker();
+  final TextEditingController issue = TextEditingController(); // 👈 add this
 
   Future<void> _pickImage(ImageSource source) async {
     final XFile? pickedFile = await _picker.pickImage(source: source);
@@ -179,7 +173,8 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         elevation: 2,
                       ),
-                      onPressed: () {
+                      onPressed: () async{
+                        await bookService();
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Request submitted successfully!')),
                         );
@@ -196,5 +191,32 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
         ),
       ),
     );
+  }
+  Future<void> bookService() async {
+    print('bookService called!'); // 👈 check if function runs at all
+
+    // Safety: open box if not already open
+    final box = Hive.isBoxOpen('bookedServices')
+        ? Hive.box<BookedService>('bookedServices')
+        : await Hive.openBox<BookedService>('bookedServices'); // 👈 open if closed
+
+    final String userEmail = widget.mail;
+    print('Email: $userEmail'); // 👈 check email
+
+    Uint8List? imageBytes;
+    if (_image != null) {
+      imageBytes = await _image!.readAsBytes();
+    }
+
+    final entry = BookedService()
+      ..name = widget.service['name'].toString()
+      ..category = widget.service['category'].toString()
+      ..issue = issue.text.toString()
+      ..image = imageBytes
+      ..bookedAt = DateTime.now().toString()
+      ..userEmail = userEmail;
+
+    await box.add(entry);
+    print('Done! Total: ${box.length}'); // 👈 confirm saved
   }
 }

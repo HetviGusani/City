@@ -56,7 +56,14 @@ class AppDrawer extends StatelessWidget {
           ListTile(
             leading:Icon(Icons.book_online, color: Colors.blue),
             title: const Text('My Bookings', style: TextStyle(fontSize: 16)),
-            onTap: () {}, // Future implementation
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => booked(email: email), // 👈 pass email
+                ),
+              );
+            }, // Future implementation
           ),
           ListTile(
             leading: const Icon(Icons.person, color: Colors.blue),
@@ -65,7 +72,7 @@ class AppDrawer extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => ProfileScreen(name: widget.name, email: widget.email),
+                  builder: (_) => ProfileScreen(name: name, email: email),
                 ),
               );
             }, // Future implementation
