@@ -143,7 +143,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                     children: [
                       Expanded(
                         child: OutlinedButton.icon(
-                          style: OutlineInputBorder(
+                          style: OutlinedButton.styleFrom(  // ✅ correct
                             padding: const EdgeInsets.symmetric(vertical: 12),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
