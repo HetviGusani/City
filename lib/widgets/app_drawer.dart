@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../screens/login_screen.dart';
+import '../screens/profile.dart';
 
 class AppDrawer extends StatelessWidget {
 
@@ -60,7 +61,14 @@ class AppDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.person, color: Colors.blue),
             title: const Text('Profile', style: TextStyle(fontSize: 16)),
-            onTap: () {}, // Future implementation
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => ProfileScreen(name: widget.name, email: widget.email),
+                ),
+              );
+            }, // Future implementation
           ),
           ListTile(
             leading: const Icon(Icons.contact_phone, color: Colors.blue),
