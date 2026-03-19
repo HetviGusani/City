@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../widgets/app_drawer.dart';
 import 'service_detail_screen.dart';
+import 'package:city/screens/service_detail_screen.dart'; // 👈 add this
 
 class HomeScreen extends StatefulWidget {
   final String name;

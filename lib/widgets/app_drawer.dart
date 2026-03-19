@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../screens/login_screen.dart';
 import '../screens/profile.dart';
+import 'package:city/screens/bookedServices.dart'; // 👈 add this
 
 class AppDrawer extends StatelessWidget {
 

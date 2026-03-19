@@ -1,14 +1,28 @@
 import 'dart:io';
-import 'dart:typed_data';                          // 👈 add
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';   // 👈 add
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import '../model/hive.dart';                        // 👈 add
+import '../model/hive.dart';
+
+class ServiceDetailScreen extends StatefulWidget {
+  final Map<String, dynamic> service;
+  final String mail;
+
+  const ServiceDetailScreen({
+    Key? key,
+    required this.service,
+    required this.mail,
+  }) : super(key: key);
+
+  @override
+  State<ServiceDetailScreen> createState() => _ServiceDetailScreenState();
+}
 
 class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
   File? _image;
   final ImagePicker _picker = ImagePicker();
-  final TextEditingController issue = TextEditingController(); // 👈 add this
+  final TextEditingController issue = TextEditingController();
 
   Future<void> _pickImage(ImageSource source) async {
     final XFile? pickedFile = await _picker.pickImage(source: source);
@@ -54,11 +68,17 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                       Expanded(
                         child: Text(
                           widget.service['name'],
-                          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.blue.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(20),
@@ -69,7 +89,10 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                             const SizedBox(width: 4),
                             Text(
                               '${widget.service['rating']}',
-                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
                             ),
                           ],
                         ),
@@ -81,7 +104,11 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                   // Category
                   Text(
                     widget.service['category'],
-                    style: TextStyle(fontSize: 18, color: Colors.grey[600], fontWeight: FontWeight.w500),
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey[600],
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
 
                   const Divider(height: 40, thickness: 1),
@@ -93,10 +120,13 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                   ),
                   const SizedBox(height: 12),
                   TextField(
+                    controller: issue, // ✅ connected to controller
                     maxLines: 3,
                     decoration: InputDecoration(
                       hintText: 'E.g., The sink is leaking...',
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                       contentPadding: const EdgeInsets.all(16),
                     ),
                   ),
@@ -113,12 +143,17 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                     children: [
                       Expanded(
                         child: OutlinedButton.icon(
-                          style: OutlinedButton.styleFrom(
+                          style: OutlineInputBorder(
                             padding: const EdgeInsets.symmetric(vertical: 12),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                           ),
                           icon: const Icon(Icons.camera_alt, color: Colors.blue),
-                          label: const Text('Camera', style: TextStyle(color: Colors.blue)),
+                          label: const Text(
+                            'Camera',
+                            style: TextStyle(color: Colors.blue),
+                          ),
                           onPressed: () => _pickImage(ImageSource.camera),
                         ),
                       ),
@@ -127,10 +162,18 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                         child: OutlinedButton.icon(
                           style: OutlinedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 12),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                           ),
-                          icon: const Icon(Icons.photo_library, color: Colors.blue),
-                          label: const Text('Gallery', style: TextStyle(color: Colors.blue)),
+                          icon: const Icon(
+                            Icons.photo_library,
+                            color: Colors.blue,
+                          ),
+                          label: const Text(
+                            'Gallery',
+                            style: TextStyle(color: Colors.blue),
+                          ),
                           onPressed: () => _pickImage(ImageSource.gallery),
                         ),
                       ),
@@ -141,7 +184,10 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
 
                   // Selected Image Preview
                   if (_image != null) ...[
-                    const Text('Selected Image:', style: TextStyle(fontWeight: FontWeight.w600)),
+                    const Text(
+                      'Selected Image:',
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
                     const SizedBox(height: 12),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(12),
@@ -155,9 +201,13 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                             fit: BoxFit.cover,
                           ),
                           IconButton(
-                            icon: const Icon(Icons.cancel, color: Colors.red, size: 30),
+                            icon: const Icon(
+                              Icons.cancel,
+                              color: Colors.red,
+                              size: 30,
+                            ),
                             onPressed: () => setState(() => _image = null),
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -170,17 +220,28 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                     height: 55,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                         elevation: 2,
                       ),
-                      onPressed: () async{
-                        await bookService();
+                      onPressed: () async {
+                        await bookService(); // ✅ awaited
+                        if (!mounted) return;
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Request submitted successfully!')),
+                          const SnackBar(
+                            content: Text('Request submitted successfully!'),
+                          ),
                         );
                         Navigator.pop(context);
                       },
-                      child: const Text('Book Service', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      child: const Text(
+                        'Book Service',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -192,16 +253,13 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
       ),
     );
   }
-  Future<void> bookService() async {
-    print('bookService called!'); // 👈 check if function runs at all
 
-    // Safety: open box if not already open
+  Future<void> bookService() async {
     final box = Hive.isBoxOpen('bookedServices')
         ? Hive.box<BookedService>('bookedServices')
-        : await Hive.openBox<BookedService>('bookedServices'); // 👈 open if closed
+        : await Hive.openBox<BookedService>('bookedServices');
 
     final String userEmail = widget.mail;
-    print('Email: $userEmail'); // 👈 check email
 
     Uint8List? imageBytes;
     if (_image != null) {
@@ -217,6 +275,11 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
       ..userEmail = userEmail;
 
     await box.add(entry);
-    print('Done! Total: ${box.length}'); // 👈 confirm saved
+  }
+
+  @override
+  void dispose() {
+    issue.dispose(); // ✅ clean up controller
+    super.dispose();
   }
 }
